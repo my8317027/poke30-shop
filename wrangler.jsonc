@@ -1,0 +1,10 @@
+{
+  // Cloudflare Workers の「静的アセット」として配信する設定。
+  // `npm run build` で dist/ を作ってから `npx wrangler deploy` で公開する。
+  "name": "poke30-shop",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

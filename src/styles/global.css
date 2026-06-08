@@ -1,0 +1,335 @@
+:root {
+  --bg: #f7f8fb;
+  --card: #ffffff;
+  --ink: #1d2433;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --brand: #d7263d; /* ポケカ赤 */
+  --brand-dark: #a51022;
+  --accent: #ffcb05; /* ポケモン黄 */
+  --blue: #2a6ad4;
+  --radius: 14px;
+  --maxw: 960px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP',
+    'Segoe UI', Meiryo, sans-serif;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ヘッダー */
+.site-header {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  color: #fff;
+  padding: 14px 0;
+  border-bottom: 4px solid var(--accent);
+}
+.site-header .container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.site-header a {
+  color: #fff;
+  text-decoration: none;
+}
+.site-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.site-nav {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+  font-size: 0.9rem;
+}
+
+/* パンくず */
+.breadcrumb {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 16px 0 4px;
+}
+.breadcrumb a {
+  color: var(--muted);
+}
+
+/* 見出し */
+h1.page-title {
+  font-size: 1.5rem;
+  margin: 8px 0 4px;
+}
+.lead {
+  color: var(--muted);
+  margin: 0 0 20px;
+  font-size: 0.95rem;
+}
+
+/* 注意バナー */
+.notice {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  color: #6b5800;
+  margin: 16px 0;
+}
+
+/* 地方タブ・カードグリッド */
+.region-block {
+  margin: 22px 0;
+}
+.region-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+  padding-left: 10px;
+  border-left: 5px solid var(--brand);
+}
+.pref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+.pref-link {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.92rem;
+  transition: border-color 0.15s, transform 0.05s;
+}
+.pref-link:hover {
+  border-color: var(--brand);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+.pref-link .badge {
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.72rem;
+  border-radius: 999px;
+  padding: 1px 8px;
+  min-width: 20px;
+  text-align: center;
+}
+.pref-link .badge.zero {
+  background: #d1d5db;
+  color: #fff;
+}
+
+/* 市リスト */
+.city-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+}
+.city-list a {
+  display: flex;
+  justify-content: space-between;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--ink);
+}
+.city-list a:hover {
+  border-color: var(--brand);
+  text-decoration: none;
+}
+
+/* 店カード */
+.store-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 14px 0;
+}
+.store-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+.store-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0 10px;
+}
+.tag {
+  font-size: 0.76rem;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-weight: 700;
+}
+.tag.method-抽選 {
+  background: #e8f0fe;
+  color: var(--blue);
+}
+.tag.method-先着 {
+  background: #fdecea;
+  color: var(--brand);
+}
+.tag.method-予約 {
+  background: #e6f4ea;
+  color: #137333;
+}
+.tag.type {
+  background: #f1f3f5;
+  color: var(--muted);
+}
+.tag.status-open {
+  background: #e6f4ea;
+  color: #137333;
+}
+.tag.status-scheduled {
+  background: #fff3cd;
+  color: #8a6d00;
+}
+.sched-note {
+  color: #8a6d00;
+}
+/* 受付予定カードは左に黄色帯を出して受付中と区別 */
+.store-card.is-scheduled {
+  border-left: 5px solid var(--accent);
+  background: #fffdf5;
+}
+.store-row {
+  font-size: 0.9rem;
+  margin: 4px 0;
+}
+.store-row .label {
+  color: var(--muted);
+  margin-right: 6px;
+}
+.conditions {
+  margin: 10px 0 4px;
+  padding: 10px 12px;
+  background: #fafbfc;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+}
+.conditions .ctitle {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+.conditions ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.88rem;
+}
+.conditions.empty {
+  color: var(--muted);
+  font-size: 0.85rem;
+  border-style: solid;
+}
+.store-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.btn {
+  display: inline-block;
+  background: var(--brand);
+  color: #fff !important;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.btn:hover {
+  background: var(--brand-dark);
+  text-decoration: none;
+}
+
+.empty-state {
+  background: var(--card);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 28px 18px;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* フッター */
+.site-footer {
+  background: #1d2433;
+  color: #cdd3df;
+  margin-top: 48px;
+  padding: 28px 0 36px;
+  font-size: 0.85rem;
+}
+.site-footer a {
+  color: #cdd3df;
+}
+.site-footer h2 {
+  font-size: 1rem;
+  color: #fff;
+  margin: 0 0 14px;
+}
+.footer-region {
+  margin-bottom: 16px;
+}
+.footer-region .rname {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 0.82rem;
+  margin-bottom: 6px;
+}
+.footer-prefs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+.footer-prefs a:hover {
+  color: #fff;
+}
+.footer-copy {
+  border-top: 1px solid #38415a;
+  margin-top: 18px;
+  padding-top: 14px;
+  color: #8b93a6;
+  font-size: 0.78rem;
+}

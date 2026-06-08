@@ -1,0 +1,35 @@
+---
+// 全47都道府県を地方別に並べるフッター。全ページに表示される。
+import { REGIONS } from '../data/regions';
+import { countByPrefecture } from '../data/filter';
+
+const counts = countByPrefecture();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <h2>都道府県から探す（全47）</h2>
+    {
+      REGIONS.map((region) => (
+        <div class="footer-region">
+          <div class="rname">{region.name}</div>
+          <div class="footer-prefs">
+            {region.prefectures.map((p) => {
+              const n = counts.get(p.name) ?? 0;
+              return (
+                <a href={`/${p.slug}`}>
+                  {p.short}
+                  {n > 0 ? `（${n}）` : ''}
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      ))
+    }
+    <div class="footer-copy">
+      ポケモンカード30周年「30th CELEBRATION」応募店舗まとめ（非公式・ファンサイト）。
+      情報は毎日更新していますが、最新・正確な内容は必ず各店の公式情報をご確認ください。
+    </div>
+  </div>
+</footer>

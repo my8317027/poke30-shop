@@ -1,0 +1,56 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import StoreCard from '../../components/StoreCard.astro';
+import { ALL_PREFECTURES, type Prefecture } from '../../data/regions';
+import { municipalitiesOf } from '../../data/municipalities';
+import { localStores, storesInCity } from '../../data/filter';
+
+// 全市区のページを生成（店がまだ無い市区も選べるようにする）
+export function getStaticPaths() {
+  const paths: { params: { pref: string; city: string }; props: { pref: Prefecture; city: string } }[] = [];
+  for (const pref of ALL_PREFECTURES) {
+    const cities = new Set(municipalitiesOf(pref.slug));
+    // マスタに無い市に店がある場合（research追加の新市）も生成対象に含める
+    for (const s of localStores()) {
+      if (s.prefecture === pref.name) cities.add(s.city);
+    }
+    for (const city of cities) {
+      paths.push({ params: { pref: pref.slug, city }, props: { pref, city } });
+    }
+  }
+  return paths;
+}
+
+interface Props {
+  pref: Prefecture;
+  city: string;
+}
+const { pref, city } = Astro.props;
+const stores = storesInCity(pref.name, city);
+---
+
+<Layout title={`${pref.name}${city}の応募店舗`}>
+  <nav class="breadcrumb">
+    <a href="/">トップ</a> ＞ <a href={`/${pref.slug}`}>{pref.name}</a> ＞ {city}
+  </nav>
+  <h1 class="page-title">{pref.name} {city} の応募できるお店</h1>
+
+  {
+    stores.length > 0 ? (
+      <>
+        <p class="lead">{stores.length} 件のお店が見つかりました。応募前に各店の条件を必ずご確認ください。</p>
+        {stores.map((s) => <StoreCard store={s} />)}
+      </>
+    ) : (
+      <div class="empty-state">
+        <p>
+          <strong>{pref.name}{city}</strong> で応募できるお店はまだ登録されていません。
+        </p>
+        <p>これから毎日情報を追加していきます。少し時間をおいて再度ご確認ください。</p>
+        <p style="margin-top:14px;">
+          📌 今すぐ応募したい方は <a href="/online">オンライン応募（全国どこでも）</a> もチェック。
+        </p>
+      </div>
+    )
+  }
+</Layout>

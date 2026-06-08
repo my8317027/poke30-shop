@@ -1,0 +1,54 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ALL_PREFECTURES, type Prefecture } from '../data/regions';
+import { citiesInPrefecture, storesInPrefecture } from '../data/filter';
+
+export function getStaticPaths() {
+  return ALL_PREFECTURES.map((p) => ({
+    params: { pref: p.slug },
+    props: { pref: p },
+  }));
+}
+
+interface Props {
+  pref: Prefecture;
+}
+const { pref } = Astro.props;
+const cities = citiesInPrefecture(pref.name);
+const totalStores = storesInPrefecture(pref.name).length;
+const citiesWithStores = cities.filter((c) => c.count > 0).length;
+---
+
+<Layout title={`${pref.name}の応募店舗`}>
+  <nav class="breadcrumb">
+    <a href="/">トップ</a> ＞ {pref.name}
+  </nav>
+  <h1 class="page-title">{pref.name}でポケカ30周年に応募できるお店</h1>
+  <p class="lead">
+    市区を選ぶと、その地域のお店と応募条件が表示されます。
+    （応募店 {totalStores} 件／店のある市区 {citiesWithStores} ヶ所）
+  </p>
+
+  {
+    totalStores === 0 && (
+      <div class="notice">
+        現在 {pref.name} の実店舗はまだ登録されていません（バッジ数字が応募店数）。
+        多くの店舗の受付は<strong>発売1ヶ月前（8月中旬〜9月上旬ごろ）</strong>に始まる見込みです。
+        今すぐ応募したい方は <a href="/online">オンライン応募（全国どこでも）</a> もどうぞ。
+      </div>
+    )
+  }
+
+  <ul class="city-list">
+    {
+      cities.map((c) => (
+        <li>
+          <a href={`/${pref.slug}/${encodeURIComponent(c.city)}`}>
+            <span>{c.city}</span>
+            <span class={c.count > 0 ? 'badge' : 'badge zero'}>{c.count}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>

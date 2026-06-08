@@ -1,0 +1,83 @@
+---
+import type { Store } from '../data/stores';
+
+interface Props {
+  store: Store;
+}
+const { store } = Astro.props;
+
+const typeLabel: Record<Store['type'], string> = {
+  physical: '実店舗',
+  chain: '全国チェーン',
+  online: 'オンライン',
+};
+
+// 'YYYY-MM-DD' → 'M月D日'
+function jpDate(d: string): string {
+  const [, m, day] = d.split('-');
+  return `${Number(m)}月${Number(day)}日`;
+}
+---
+
+<article class={store.status === 'scheduled' ? 'store-card is-scheduled' : 'store-card'}>
+  <h3>{store.name}</h3>
+
+  <div class="store-meta">
+    {
+      store.status === 'open' ? (
+        <span class="tag status-open">✅ 受付中</span>
+      ) : (
+        <span class="tag status-scheduled">🕗 受付予定</span>
+      )
+    }
+    <span class={`tag method-${store.method}`}>{store.method}</span>
+    <span class="tag type">{typeLabel[store.type]}</span>
+  </div>
+
+  <div class="store-row">
+    <span class="label">対象商品</span>{store.product}
+  </div>
+  {
+    store.status === 'open' ? (
+      <div class="store-row">
+        <span class="label">応募期間</span>
+        {jpDate(store.applyStart)} 〜 {jpDate(store.applyEnd)}
+      </div>
+    ) : (
+      <div class="store-row">
+        <span class="label">受付時期</span>
+        <span class="sched-note">{store.scheduleNote}</span>
+      </div>
+    )
+  }
+  {
+    store.address && (
+      <div class="store-row">
+        <span class="label">住所</span>
+        {store.address}
+      </div>
+    )
+  }
+
+  {
+    store.conditions.length > 0 ? (
+      <div class="conditions">
+        <div class="ctitle">📋 応募条件</div>
+        <ul>
+          {store.conditions.map((c) => (
+            <li>{c}</li>
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <div class="conditions empty">応募条件の記載なし（自由に応募可・要最新確認）</div>
+    )
+  }
+
+  <div class="store-foot">
+    <span>更新: {store.lastUpdated}／出典: {store.source}</span>
+    <a class="btn" href={store.url} target="_blank" rel="noopener noreferrer">
+      {store.status === 'open' ? '応募ページへ →' : '店舗ページを見る →'}
+    </a>
+  </div>
+</article>

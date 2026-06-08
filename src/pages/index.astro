@@ -1,0 +1,63 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StoreCard from '../components/StoreCard.astro';
+import { REGIONS } from '../data/regions';
+import { countByPrefecture, onlineStores, localStores } from '../data/filter';
+import { validateStores } from '../data/validate';
+
+// ビルド時にデータ整合性を検証（問題があればここで失敗する）
+validateStores();
+
+const counts = countByPrefecture();
+const online = onlineStores();
+const localCount = localStores().length;
+---
+
+<Layout title="">
+  <h1 class="page-title">ポケカ30周年「30th CELEBRATION」応募店舗まとめ</h1>
+  <p class="lead">
+    あなたの地域で応募できるお店を、地方 → 都道府県 → 市の順でかんたんに探せます。
+    各店の<strong>応募条件</strong>（購入条件・会員限定など）も掲載。情報は毎日更新中。
+  </p>
+
+  <div class="notice">
+    ⏰ 掲載対象は応募期間が <strong>2026年6月6日〜10月末</strong> のものです。
+    現在の掲載：実店舗 {localCount} 件／オンライン {online.length} 件。<br />
+    <strong>✅ 受付中</strong>（今すぐ応募できる）と <strong>🕗 受付予定</strong>（日程は予想・要確認）を
+    ラベルで区別しています。多くの店舗の受付は<strong>発売1ヶ月前（8月中旬〜9月上旬ごろ）</strong>に始まる見込みです。
+  </div>
+
+  <h2 class="region-name" style="margin-top:28px;">地方から探す</h2>
+  {
+    REGIONS.map((region) => (
+      <section class="region-block">
+        <h3 class="region-name">{region.name}</h3>
+        <div class="pref-grid">
+          {region.prefectures.map((p) => {
+            const n = counts.get(p.name) ?? 0;
+            return (
+              <a class="pref-link" href={`/${p.slug}`}>
+                <span>{p.name}</span>
+                <span class={n > 0 ? 'badge' : 'badge zero'}>{n}</span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    ))
+  }
+
+  {
+    online.length > 0 && (
+      <section style="margin-top:32px;">
+        <h2 class="region-name">🌐 オンラインで応募できる（全国どこでも）</h2>
+        {online.slice(0, 3).map((s) => (
+          <StoreCard store={s} />
+        ))}
+        <p style="margin-top:8px;">
+          <a href="/online">オンライン応募の一覧をすべて見る →</a>
+        </p>
+      </section>
+    )
+  }
+</Layout>

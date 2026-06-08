@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StoreCard from '../components/StoreCard.astro';
+import { onlineStores } from '../data/filter';
+
+const stores = onlineStores();
+---
+
+<Layout title="オンライン応募">
+  <nav class="breadcrumb">
+    <a href="/">トップ</a> ＞ オンライン応募
+  </nav>
+  <h1 class="page-title">🌐 オンラインで応募できる（全国どこでも）</h1>
+  <p class="lead">
+    地域に関係なく、ネットから応募できる窓口の一覧です。応募条件・会員登録の要否もあわせて確認できます。
+    <strong>✅ 受付中</strong>＝今すぐ応募可／<strong>🕗 受付予定</strong>＝日程は予想・正式告知待ち（要確認）。
+  </p>
+
+  {
+    stores.length > 0 ? (
+      stores.map((s) => <StoreCard store={s} />)
+    ) : (
+      <div class="empty-state">現在オンライン応募の登録はありません。</div>
+    )
+  }
+</Layout>
