@@ -19,7 +19,7 @@ const HEADERS = {
 };
 const BOT_BLOCK = new Set([401, 403, 405, 406, 429]);
 
-async function probe(url) {
+async function probeOnce(url) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {
@@ -38,17 +38,45 @@ async function probe(url) {
   }
 }
 
+// 接続失敗(0)や5xxは一時的なことが多いので最大3回までリトライ
+async function probe(url) {
+  let last;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) await new Promise((r) => setTimeout(r, 800 * attempt));
+    last = await probeOnce(url);
+    if (!(last.status === 0 || last.status >= 500)) return last;
+  }
+  return last;
+}
+
 function classify(status) {
   if (status >= 200 && status < 300) return 'ok';
   if (BOT_BLOCK.has(status)) return 'blocked';
   return 'bad';
 }
 
-const results = [];
-for (const s of STORES) {
+// 並列実行(同時8件)。店舗数が増えても全体が数十秒で終わるようにする。
+const CONCURRENCY = 8;
+async function runPool(items, worker) {
+  const out = new Array(items.length);
+  let next = 0;
+  async function lane() {
+    while (next < items.length) {
+      const i = next++;
+      out[i] = await worker(items[i], i);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(CONCURRENCY, items.length) }, lane));
+  return out;
+}
+
+const results = await runPool(STORES, async (s) => {
   const r = await probe(s.url);
   const kind = classify(r.status);
-  results.push({ s, r, kind });
+  return { s, r, kind };
+});
+
+for (const { s, r, kind } of results) {
   const icon = kind === 'ok' ? '✅' : kind === 'blocked' ? '🔒' : '❌';
   const detail = r.status ? `HTTP ${r.status}` : `接続失敗(${r.error})`;
   console.log(`${icon} [${s.status}] ${s.name}`);
