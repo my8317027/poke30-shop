@@ -19,17 +19,13 @@ function jpDate(d: string): string {
 }
 ---
 
-<article class={store.status === 'scheduled' ? 'store-card is-scheduled' : 'store-card'}>
+<article class={`store-card${store.status === 'scheduled' ? ' is-scheduled' : ''}${store.status === 'ended' ? ' is-ended' : ''}`}>
   <h3>{store.name}</h3>
 
   <div class="store-meta">
-    {
-      store.status === 'open' ? (
-        <span class="tag status-open">✅ 受付中</span>
-      ) : (
-        <span class="tag status-scheduled">🕗 受付予定</span>
-      )
-    }
+    {store.status === 'open' && <span class="tag status-open">✅ 受付中</span>}
+    {store.status === 'scheduled' && <span class="tag status-scheduled">🕗 受付予定</span>}
+    {store.status === 'ended' && <span class="tag status-ended">⛔ 受付終了</span>}
     <span class={`tag method-${store.method}`}>{store.method}</span>
     <span class="tag type">{typeLabel[store.type]}</span>
   </div>
@@ -38,15 +34,28 @@ function jpDate(d: string): string {
     <span class="label">対象商品</span>{store.product}
   </div>
   {
-    store.status === 'open' ? (
+    store.status === 'open' && (
       <div class="store-row">
         <span class="label">応募期間</span>
         {jpDate(store.applyStart)} 〜 {jpDate(store.applyEnd)}
       </div>
-    ) : (
+    )
+  }
+  {
+    store.status === 'scheduled' && (
       <div class="store-row">
         <span class="label">受付時期</span>
         <span class="sched-note">{store.scheduleNote}</span>
+      </div>
+    )
+  }
+  {
+    store.status === 'ended' && (
+      <div class="store-row">
+        <span class="label">応募期間</span>
+        <span class="ended-note">
+          {jpDate(store.applyStart)} 〜 {jpDate(store.applyEnd)}（受付終了）
+        </span>
       </div>
     )
   }
@@ -76,8 +85,10 @@ function jpDate(d: string): string {
 
   <div class="store-foot">
     <span>更新: {store.lastUpdated}／出典: {store.source}</span>
-    <a class="btn" href={store.url} target="_blank" rel="noopener noreferrer">
-      {store.status === 'open' ? '応募ページへ →' : '店舗ページを見る →'}
+    <a class={store.status === 'ended' ? 'btn btn-muted' : 'btn'} href={store.url} target="_blank" rel="noopener noreferrer">
+      {store.status === 'open' && '応募ページへ →'}
+      {store.status === 'scheduled' && '店舗ページを見る →'}
+      {store.status === 'ended' && '結果・詳細を見る →'}
     </a>
   </div>
 </article>

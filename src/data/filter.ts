@@ -13,10 +13,15 @@ export function isActive(store: Store): boolean {
   return store.applyEnd >= WINDOW_START && store.applyStart <= WINDOW_END;
 }
 
-// 期間内の店だけ（受付中→受付予定 の順に並べる）
+// 表示順の重み（受付中→受付予定→受付終了）
+const STATUS_ORDER: Record<Store['status'], number> = { open: 0, scheduled: 1, ended: 2 };
+
+// 期間内の店だけ（受付中→受付予定→受付終了 の順に並べる）
 export function activeStores(): Store[] {
   return STORES.filter(isActive).sort((a, b) => {
-    if (a.status !== b.status) return a.status === 'open' ? -1 : 1;
+    if (a.status !== b.status) return STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
+    // 受付終了は新しく終わったものを上に、それ以外は開始日順
+    if (a.status === 'ended') return b.applyEnd.localeCompare(a.applyEnd);
     return a.applyStart.localeCompare(b.applyStart);
   });
 }

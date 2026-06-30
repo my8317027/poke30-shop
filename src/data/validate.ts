@@ -22,8 +22,8 @@ export function validateStores(): { ok: true; count: number } {
     if (!s.name) errors.push(`${where}: name がありません`);
     if (!s.url) errors.push(`${where}: url（応募/告知ページ）がありません`);
     if (!s.source) errors.push(`${where}: source（出典）がありません`);
-    if (s.status !== 'open' && s.status !== 'scheduled') {
-      errors.push(`${where}: status は 'open' か 'scheduled' を指定してください (${s.status})`);
+    if (s.status !== 'open' && s.status !== 'scheduled' && s.status !== 'ended') {
+      errors.push(`${where}: status は 'open' / 'scheduled' / 'ended' のいずれかにしてください (${s.status})`);
     }
 
     // ★最重要★ url の健全性チェック

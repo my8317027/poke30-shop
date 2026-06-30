@@ -227,10 +227,31 @@ h1.page-title {
 .sched-note {
   color: #8a6d00;
 }
+.tag.status-ended {
+  background: #eceff1;
+  color: #78838c;
+}
+.ended-note {
+  color: #78838c;
+}
 /* 受付予定カードは左に黄色帯を出して受付中と区別 */
 .store-card.is-scheduled {
   border-left: 5px solid var(--accent);
   background: #fffdf5;
+}
+/* 受付終了カードはグレーで控えめに */
+.store-card.is-ended {
+  border-left: 5px solid #cfd8dc;
+  background: #fafbfc;
+}
+.store-card.is-ended h3 {
+  color: #78838c;
+}
+.btn.btn-muted {
+  background: #90a4ae;
+}
+.btn.btn-muted:hover {
+  background: #78838c;
 }
 .store-row {
   font-size: 0.9rem;

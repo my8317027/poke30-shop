@@ -8,8 +8,8 @@
 
 export type ApplyType = 'physical' | 'chain' | 'online';
 export type ApplyMethod = '抽選' | '先着' | '予約';
-// open … 受付中（日程確定）／ scheduled … 受付予定（日程は予想・未確定）
-export type ApplyStatus = 'open' | 'scheduled';
+// open … 受付中（日程確定）／ scheduled … 受付予定（日程は予想・未確定）／ ended … 受付終了
+export type ApplyStatus = 'open' | 'scheduled' | 'ended';
 
 export interface Store {
   id: string; // 一意キー（重複防止）。例: 'amazon-30th-box'
@@ -94,6 +94,48 @@ export const STORES: Store[] = [
     ],
     url: 'https://www.pokemoncenter-online.com/feature/30th.html',
     source: 'ポケモンセンターオンライン公式 30th特集 / お知らせ 2026-06 / 攻略大百科',
+    lastUpdated: '2026-06-29',
+  },
+
+  // ───── 受付終了（ended）：過去に実施され、すでに受付が終わったもの（参考・記録用） ─────
+  {
+    id: 'famima-online-premium-deck-ended',
+    name: 'ファミマオンライン（プレミアムデッキセット エーフィ・ブラッキー 抽選）',
+    type: 'online',
+    status: 'ended',
+    prefecture: '-',
+    city: '-',
+    applyStart: '2026-06-08',
+    applyEnd: '2026-06-21',
+    product: '30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー',
+    method: '抽選',
+    conditions: [
+      '抽選申込は2026/6/8 10:00〜6/21 23:59で受付終了',
+      '当選発表は2026/6/23',
+      '商品受取期間 2026/10/2〜10/15',
+    ],
+    url: 'https://convenicheck.com/news/news_famima/125496/',
+    source: 'https://convenicheck.com/news/news_famima/125496/',
+    lastUpdated: '2026-06-29',
+  },
+  {
+    id: 'lawson-premium-deck-ended',
+    name: 'ローソン（プレミアムデッキセット エーフィ・ブラッキー 先着）',
+    type: 'online',
+    status: 'ended',
+    prefecture: '-',
+    city: '-',
+    applyStart: '2026-06-23',
+    applyEnd: '2026-06-23',
+    product: '30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー',
+    method: '先着',
+    conditions: [
+      '2026/6/23 10:00〜の先着・数量限定。受付開始後まもなく完売し終了',
+      'お渡し日 2026/9/16',
+      'お一人様1点まで',
+    ],
+    url: 'https://www.lawson.co.jp/lab/entertainment/art/20260623_giftpokemon.html',
+    source: 'https://www.lawson.co.jp/lab/entertainment/art/20260623_giftpokemon.html',
     lastUpdated: '2026-06-29',
   },
 
