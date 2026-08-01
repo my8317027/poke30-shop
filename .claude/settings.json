@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:search.yahoo.co.jp)",
+      "WebFetch(domain:pokecafun.com)",
+      "WebFetch(domain:www.c-labo-online.jp)",
+      "WebFetch(domain:pokeca-navi.jp)",
+      "WebFetch(domain:cardchusen.com)"
+    ]
+  }
+}
