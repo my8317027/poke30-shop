@@ -19,6 +19,17 @@ const HEADERS = {
 };
 const BOT_BLOCK = new Set([401, 403, 405, 406, 429]);
 
+// スクリプトからのアクセスをネットワーク段階で遮断するが、人がブラウザで開けば正常に使えるサイト。
+// （ここに入れるURLは「ブラウザで開いて実際に応募できる」ことを人が確認したものだけにすること）
+const MANUALLY_VERIFIED_HOSTS = new Set(['www.pokemoncenter-online.com', 'pokemoncenter-online.com']);
+function isManuallyVerified(url) {
+  try {
+    return MANUALLY_VERIFIED_HOSTS.has(new URL(url).hostname);
+  } catch {
+    return false;
+  }
+}
+
 async function probeOnce(url) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
@@ -72,7 +83,9 @@ async function runPool(items, worker) {
 
 const results = await runPool(STORES, async (s) => {
   const r = await probe(s.url);
-  const kind = classify(r.status);
+  let kind = classify(r.status);
+  // ボット遮断が確認済みのサイトは「人は開ける」扱いにする
+  if (kind === 'bad' && r.status === 0 && isManuallyVerified(s.url)) kind = 'blocked';
   return { s, r, kind };
 });
 
